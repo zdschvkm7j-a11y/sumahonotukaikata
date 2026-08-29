@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width
+,initial-scale=1.0">
+<title>にじげんこーどのよみとり</title>
+    </head>
+    <body style="background-color: aliceblue; 
+    font-family: sans-serif; font-size: 20px;">
+
+<a href="index.html" style="font-size: 22px; text-decoration: none;
+ background-color:  #ddd; padding: 10px 15px; border-radius: 8px;
+  color: black; display: inline-block; margin-bottom: 20px;">
+  ⬅️ もとのがめんにもどる
+</a>
+<h1>1. にじげんこーどのよみとり</h1>
+<dev style="margin: 30px;"></dev>
+<button onclick="yomu('にじげんこーどのよみとり')"
+>🎙️ 説明を聞く</button>
+
+
+<button onclick="tomeru()">⏹️ 音声を止める</button>
+    <button onclick="yomu('にじげんこーどのよみとりかたです。1すまーとふぉんのがめんをみぎうえのあたりからゆびをすべらせます。2そしたらみぎしたのあたりにしかくいやつがあるのでそれをおします。3読み取りたいきゅーらーるこーどを画面のしかくに合わせます。')"
+    style="font-size: 26px; padding: 15px 25px; cursor: pointer;">
+
+<hr style="margin: 20px 0;">
+<h2>よみとりかた</h2>
+<p>1 すまーとふぉんのがめんをみぎうえからしたにゆびをすべらる</p>
+<p>2 みぎしたのあたりにしかくいやつがあるのでそれをおす</p>
+<p>3 あとはよみとりたいきゅーらーるこーどをしかくいわくにあわせる</p>
+<script>
+                //音声を読み上げる関数
+                    function yomu(text) {
+                   const speech = new SpeechSynthesisUtterance(text);
+                    speech.lang = "ja-JP";
+                    
+                    //再生中の音声を一度クリアしてすぐに新しい文字を喋る　
+                    speechSynthesis.cancel() ;
+                    speechSynthesis.speak(speech);
+                  }
+                    //音声を止める関数
+                    function tomeru(){
+                        speechSynthesis.cancel();
+                    }
+
+                    
+
+
+            </script>
+</body>
+</html>
+

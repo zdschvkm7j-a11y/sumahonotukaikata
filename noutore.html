@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>すうじのじゅうんばんにおそう</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                user-select: none;
+                -webkit-user-select: none;
+            }
+            body{
+                font-family: 'Helvetica, Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragono Sans', Meriyo, sans-serif;
+                background-color: #eef3f8;
+                color: #102a43;
+                font-size: 18px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-height: 100vh;
+                padding: 20px; 
+
+            }
+            .headertitle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 10px;
+                margin-bottom: 4px;
+
+            }
+            .title-char{
+                width: 20px;
+                height: 50px;  
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 26px;
+                font-weight: bold;
+        
+                border-radius: 4px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .char-gray{
+                background-color: #52606d;
+                color: #fff;}
+            .char-pink{
+                background-color: #007c91;
+                color: #fff;
+        }
+        .subtitle{
+            font-size: 18px;
+            color: #8a1c1c;
+            margin-bottom: 20px;
+        font-weight: bold;
+        }
+        .description{
+            font-size: 18px;
+            color: #243b53;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .game-card{
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px;
+display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 3px solid #005a9c;
+        }
+.config-view{
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+text-align: center;
+}
+.config-title{
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.6;
+    color: #8a1c1c;
+    margin-bottom: 20px;
+}
+.select-group{
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    width: 100%;
+    justify-content: center;
+}
+.costom-select{
+    background-color: #ffffff;
+    border: 2px solid #243b53;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #102a43;
+    cursor: pointer;
+    outline: none;}
+    .botton-red{
+        background-color: #b42318;
+        border-radius: 8px;
+        padding: 12px 45px;
+        font-size: 22px;
+        font-weight: bold;
+        color: #ffffff;
+        border: 2px solid #000000;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s, transform 0.2s;
+           }
+           .botton-red:active {
+            background-color: #7a271a;
+            transform: translateY(2px);
+           }
+           .play-view{
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+           }
+           .game-status-bar{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fffffe;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+           }
+           .next-targrt{
+            font-size: 18px;
+            color: #102a43;
+            
+           }     
+           .time-display{
+            font-size: 20px;
+            color: #b42318;
+            font-family: monospace;
+           }   
+           .round-info{
+            font-size: 18px;
+            color: #005252;
+           }
+           .grid-board{
+            display: grid;
+            gap:8px;
+            width: 100%;
+                    max-width: 400px;
+            aspect-ratio: 1;
+            margin-bottom: 15px;
+           }
+.grid-cell{
+    background-color: #ffffff;
+    border: 3px solid #243b53;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #102a43; cursor: pointer;
+    box-shadow: 0 3px 0 #102a43;
+    transition: all 0.08s ease;
+    touch-action: manipulation;
+
+}
+.grid-cell.small-number {
+    font-size: 22px;
+}
+.grid-cell:active{
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #000000;
+}
+.grid-cell.pressed{
+    background-color: #d9e2ec;
+    color: #52606d;
+    border-color: #7b8794;
+    box-shadow: none;
+    cursor: default;
+    transform: translateY(3px);
+pointer-events: none;
+}
+.grid-cell.wrong{
+    animation: shake 0.3s;
+    background-color: #fff3b0;
+    border-color: #b7791f;
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}.button-secondary{
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 18px;
+    color: #102a43;
+    border: 2px solid #243b53;
+    cursor: pointer;
+}
+.button-secondary:active{
+    transform: translateY(1px);
+}
+    .result-view{
+        width: 100%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .result-title{
+        font-size: 24px;
+        font-weight: bold;
+        color: #005a9c;
+        margin-bottom: 15px;
+    }
+    .result-label{
+        font-size: 36px;
+        color: #b42318;}
+        .result-score{
+            font-size: 48px;
+            font-weight: bold;
+            color: #102a43;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+.result-detail{
+    font-size: 18px;
+    color: #243b53;
+background-color: #ffffff;
+padding: 12px;
+border-radius: 8px;
+width: 100%;
+margin-bottom: 20px;
+text-align: left;
+}
+@media (max-width: 600px) {
+    .headertitle {
+        gap: 5px;
+    }
+    .title-char {
+        width: 38px;
+        height: 44px;
+        font-size: 20px;
+    }
+    .game-card {
+        padding: 20px 15px;
+    }
+    
+        .costom-select {
+            padding: 8px 12px;
+            font-size: 18px;       
+    }
+.grid-cell {
+    font-size: 24px;}
+    .grid-board {
+        gap: 6px;
+    }
+}
+</style>
+    </head>
+    <body>
+        <div class="headertitle">
+            <div class="title-char char-gray">す</div>
+            <div class="title-char char-pink">う</div>
+            <div class="title-char char-gray">じ</div>
+            <div class="title-char char-pink">の</div>
+            <div class="title-char char-gray">じ</div>
+            <div class="title-char char-pink">ゅ</div>
+            <div class="title-char char-gray">う</div>
+            <div class="title-char char-pink">ん</div>
+            <div class="title-char char-gray">ば</div>
+            <div class="title-char char-pink">ん</div>
+            <div class="title-char char-gray">に</div>
+            <div class="title-char char-pink">お</div>
+            <div class="title-char char-gray">そ</div>
+            <div class="title-char char-pink">う</div>
+        </div>
+        <div class="sub-title">げーむ</div>
+        <div class="subtitle">すうじをじゅんばんにおしていくゲーム</div>
+        <div class="game-card">
+            <div id="configView"
+            class="config-view">
+            <div class="config-title">せっていしてかいし</div>
+            </div>
+            <div class="select-group">
+                <select id="gridSizeSelect" class="costom-select">
+                    <option value="3">3×3</option>
+                    <option value="4">4×4</option>
+                    <option value="5">5×5</option>
+                </select>
+                <select id="roundsSelect" class="costom-select">
+                    <option value="1">1かい</option>
+                    <option value="2">2かい</option>
+                    <option value="3">3かい</option>
+                </select>
+            </div>
+            <div class="play-view" id="playView">
+                <div class="game-status-bar">
+                    <div class="next-targrt">つぎ: <span id="nextTarget">1</span></div>
+                    <div class="time-display" id="timeDisplay">00:00</div>
+                    <div class="round-info" id="roundInfo">1/1</div>
+                </div>
+                <div class="grid-board" id="gridBoard"></div>
+            <button id="giveUpButton" class="button-secondary">あきらめる</button>
+            </div>
+            <div class="result-view" id="resultView">
+                <div class="result-title">けっか</div>
+                <div class="result-label">じかん</div>
+                <div class="result-score" id="finalTime">00:00</div>
+                <div class="result-detail" id="resultDetail"></div>
+                <button id="restartButton" class="botton-red">さいしょから</button>
+            </div>
+        </div>
+        <script>
+            function speakText(text) {
+                if (!('speechSynthesis' in window)) return;
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ja-JP';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+
+            let totalCells = 16;
+            let totalRounds = 2;
+            let currentRound = 1;
+            let nextTarget = 1;
+            let startTime;
+            let timerInterval=null;
+            let roundTimes = [];
+            const configView = document.getElementById('configView');
+            const playView = document.getElementById('playView');
+            const resultView = document.getElementById('resultView');
+            const gridSizeSelect = document.getElementById('gridSizeSelect');
+            const roundsSelect = document.getElementById('roundsSelect');
+            const giveUpButton = document.getElementById('giveUpButton');
+            const restartButton = document.getElementById('restartButton');
+            const roundDisplay = document.getElementById('roundInfo');
+            const nextTargetDisplay = document.getElementById('nextTarget');
+            const timeDisplay = document.getElementById('timeDisplay');
+            const gridBoard = document.getElementById('gridBoard');
+            const finalTimeDisplay = document.getElementById('finalTime');
+            const resultDetailDisplay = document.getElementById('resultDetail');
+            function startGame() {
+                totalCells = parseInt(gridSizeSelect.value) ** 2;
+                totalRounds = parseInt(roundsSelect.value);
+                currentRound = 1;
+                roundTimes = [];
+                configView.style.display = 'none';
+                playView.style.display = 'flex';
+                resultView.style.display = 'none';
+                document.getElementById('startButton').style.display = 'none';
+                startRound();
+            }
+
+            function startRound() {
+                nextTarget = 1;
+                roundDisplay.textContent = `${currentRound}/${totalRounds}`;
+                nextTargetDisplay.textContent = nextTarget;
+                timeDisplay.textContent = '00:00';
+                const gridSize = Math.sqrt(totalCells);
+                gridBoard.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+                generateGrid();
+                const roundMessage = currentRound === 1
+                    ? 'スタートします'
+                    : `ラウンド${currentRound}`;
+                speakText(roundMessage);
+                startTime = Date.now();
+                if (timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(updateTimer, 100);
+            }
+
+            function generateGrid() {
+                const numbers = Array.from({length: totalCells}, (_, index) => index + 1);
+                for (let index = numbers.length - 1; index > 0; index--) {
+                    const randomIndex = Math.floor(Math.random() * (index + 1));
+                    [numbers[index], numbers[randomIndex]] = [numbers[randomIndex], numbers[index]];
+                }
+
+                gridBoard.innerHTML = '';
+                numbers.forEach(number => {
+                    const cell = document.createElement('div');
+                    cell.classList.add('grid-cell');
+                    cell.textContent = number;
+                    if (totalCells === 25) cell.classList.add('small-number');
+                    cell.addEventListener('click', () => handleCellClick(cell, number));
+                    gridBoard.appendChild(cell);
+                });
+            }
+
+            function updateTimer() {
+                const elapsedTime = Date.now() - startTime;
+                const minutes = Math.floor(elapsedTime / 60000);
+                const seconds = Math.floor((elapsedTime % 60000) / 1000);
+                timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            function handleCellClick(cell, num) {
+                if (num === nextTarget) {
+                    cell.classList.add('pressed');
+                    nextTarget++;
+                    nextTargetDisplay.textContent = nextTarget;
+                    if (nextTarget > totalCells) {
+                        clearInterval(timerInterval);
+                        const elapsedTime = Date.now() - startTime;
+                        roundTimes.push(elapsedTime);
+                        if (currentRound < totalRounds) {
+                            currentRound++;
+                            startRound();
+                        } else {
+                            showResults();
+                        }
+                    }
+                } else {
+                    cell.classList.add('wrong');
+                    setTimeout(() => cell.classList.remove('wrong'), 300);
+                }
+            }
+
+            restartButton.addEventListener('click', startGame);
+            giveUpButton.addEventListener('click', giveUp);
+            function giveUp() {
+                speakText('あきらめました');
+                clearInterval(timerInterval);
+                roundTimes.push(null);
+                if (currentRound < totalRounds) {
+                    currentRound++;
+                    startRound();
+                } else {
+                    showResults();
+                }
+            }
+            function showResults() {
+                playView.style.display = 'none';
+                resultView.style.display = 'flex';
+                const totalTime = roundTimes.reduce((acc, time) => acc + (time || 0), 0);
+                const minutes = Math.floor(totalTime / 60000);
+                const seconds = Math.floor((totalTime % 60000) / 1000);
+                finalTimeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                resultDetailDisplay.innerHTML = roundTimes.map((time, index) => {
+                    if (time === null) return `Round ${index + 1}: あきらめた`;
+                    const min = Math.floor(time / 60000);
+                    const sec = Math.floor((time % 60000) / 1000);
+                    return `Round ${index + 1}: ${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+                }).join('<br>');
+                speakText(`ゲームがおわりました。タイムは${minutes}分${seconds}秒です`);
+            }
+
+            
+            </script>
+            
+
+        <button type="button" id="startButton" onclick="startGame()">スタート開始</button>
+    </body>
+</html>

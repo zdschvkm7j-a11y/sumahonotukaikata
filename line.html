@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width
+,initial-scale=1.0">
+<title>あかるさ・もじのおおきさかえかた</title>
+    </head>
+    <body style="background-color: aliceblue; 
+    font-family: sans-serif; font-size: 20px;">
+
+<a href="index.html" style="font-size: 22px; text-decoration: none;
+ background-color:  #ddd; padding: 10px 15px; border-radius: 8px;
+  color: black; display: inline-block; margin-bottom: 20px;">
+  ⬅️ もとのがめんにもどる
+</a>
+<h1>1. あかるさ・もじのおおきさをかえる</h1>
+<dev style="margin: 30px;"></dev>
+<button onclick="yomu('ラインインスタグラムの使い方ですラインは家族や友達と連絡を取れ。いんすたぐらむは写真や動画を見て楽しめます。')"
+>🎙️ 説明を聞く</button>
+<button onclick="tomeru()">⏹️ 音声を止める</pbutton>
+    <button onclick="yomu('らいんについて</h2>1 .ともだちのつかほうほうはみぎうえのじゅうじまーくをおします2 .ともだちをついかするをおして3 .きゅーらーるこーどをおすとあいてのこ－どをよみとれたりじぶんのこーどがでるためそれをあいてによみとってもらいます。いんすたぐまむのつかいかた1 .ひらいたらがめんのしたがわにあるぼたんをおすとすきなきのうがつかえます2 .ひだりからほーむ、どうがしちょう、けんさく、どうがけんさく、じぶんのぷろふぃーる)"
+    style="font-size: 26px; padding: 15px 25px; cursor: pointer;">
+
+<hr style="margin: 20px 0;">
+<h2>らいんについて</h2>
+<p>1 ともだちのつかほうほうはみぎうえのじゅうじまーくをおします</p>
+<p>2 ともだちをついかするをおして</p>
+<p>3 きゅーらーるこーどをおすとあいてのこ－どをよみとれたりじぶんのこーどがでるためそれをあいてによみとってもらいます。</p>
+<p>いんすたぐまむのつかいかた</p>
+<p>ひらいたらがめんのしたがわにあるぼたんをおすとすきなきのうがつかえます</p>
+<p>ひだりからほーむ、どうがしちょう、けんさく、どうがけんさく、じぶんのぷろふぃーる</p>
+
+<script>
+                //音声を読み上げる関数
+                    function yomu(text) {
+                   const speech = new SpeechSynthesisUtterance(text);
+                    speech.lang = "ja-JP";
+                    
+                    //再生中の音声を一度クリアしてすぐに新しい文字を喋る　
+                    speechSynthesis.cancel() ;
+                    speechSynthesis.speak(speech);
+                  }
+                    //音声を止める関数
+                    function tomeru(){
+                        speechSynthesis.cancel();
+                    }
+
+            </script>
+
+
+
+</body>
+
+
+
+</html>
