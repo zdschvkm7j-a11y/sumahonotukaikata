@@ -40,8 +40,42 @@
     .button-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 16px;
       margin: 12px 0 20px;
+    }
+    #difficulty-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin: 24px 0 28px;
+    }
+    .difficulty-btn {
+      appearance: none;
+      border: 3px solid rgba(0,0,0,0.18);
+      border-radius: 18px;
+      background: #e2e8f0;
+      color: var(--text);
+      font-size: clamp(1.15rem, 2vw, 1.5rem);
+      font-weight: 800;
+      padding: 20px 22px;
+      min-height: 72px;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+    }
+    .difficulty-btn.easy { background: linear-gradient(180deg, #4ade80, #16a34a); color: #fff; }
+    .difficulty-btn.normal { background: linear-gradient(180deg, #fbbf24, #f59e0b); color: #fff; }
+    .difficulty-btn.hard { background: linear-gradient(180deg, #f87171, #dc2626); color: #fff; }
+    .difficulty-btn.active {
+      box-shadow: 0 10px 22px rgba(30,64,175,0.25);
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.7);
+      filter: brightness(1.04);
     }
     .action-btn {
       appearance: none;
@@ -91,14 +125,23 @@
   <a href="index.html" class="back-link">⬅️ もとのがめんにもどる</a>
   <h1>1. のうのとれーにんぐ</h1>
 
-  <div class="button-row">
-    <button type="button" class="action-btn" id="start-game-btn">🎮 ゲーム開始</button>
+  <div style="margin: 20px 0 12px; text-align: center; font-size: 1.5rem; font-weight: 800; color: #1e5bd7;">
+    なんいどをえらんでください
+  </div>
+
+  <div class="button-row" id="difficulty-row">
+    <button type="button" class="difficulty-btn easy active" data-difficulty="easy">簡単（1桁+1桁）</button>
+    <button type="button" class="difficulty-btn normal" data-difficulty="normal">ふつう（1桁+2桁）</button>
+    <button type="button" class="difficulty-btn hard" data-difficulty="hard">むずかしい（2桁+2桁）</button>
   </div>
 
   <div id="game-container" style="display:none;">
     <div style="background: #ffffff; border: 3px solid #2d4d8a; border-radius: 18px; padding: 30px; margin: 20px 0; box-shadow: 0 10px 24px rgba(26, 77, 166, 0.12);">
       <h2 id="problem-text" style="font-size: 2rem; text-align: center; margin: 20px 0; color: #1e5bd7;">問題が表示されます</h2>
-      <div id="score-display" style="text-align: center; font-size: 1.5rem; color: #113d8f; margin-bottom: 20px;">スコア: <span id="score">0</span>/10</div>
+      <div id="score-display" style="text-align: center; font-size: 1.5rem; color: #113d8f; margin-bottom: 8px;">スコア: <span id="score">0</span>/10</div>
+      <div id="level-display" style="text-align: center; font-size: 1.3rem; color: #0f172a; margin-bottom: 8px; font-weight: bold;">レベル: 簡単</div>
+      <div id="streak-display" style="text-align: center; font-size: 1.2rem; color: #0f766e; margin-bottom: 8px; font-weight: bold;">連続正解: 0</div>
+      <div id="best-score-display" style="text-align: center; font-size: 1.2rem; color: #7c2d12; margin-bottom: 20px; font-weight: bold;">最高記録: 0</div>
       
       <div style="background: #eef7ff; border-radius: 12px; padding: 20px; margin: 20px 0;">
         <p style="font-size: 1.3rem; text-align: center; margin: 10px 0;">答え：</p>
@@ -116,7 +159,6 @@
 
   <script>
     (function () {
-      const startGameBtn = document.getElementById('start-game-btn');
       const gameContainer = document.getElementById('game-container');
       const problemText = document.getElementById('problem-text');
       const answerInput = document.getElementById('answer-input');
@@ -124,33 +166,121 @@
       const quitBtn = document.getElementById('quit-btn');
       const resultMessage = document.getElementById('result-message');
       const scoreDisplay = document.getElementById('score');
+      const levelDisplay = document.getElementById('level-display');
+      const streakDisplay = document.getElementById('streak-display');
+      const bestScoreDisplay = document.getElementById('best-score-display');
+      const difficultyButtons = document.querySelectorAll('.difficulty-btn');
       
       let currentProblem = null;
       let currentAnswer = null;
       let score = 0;
       let totalProblems = 10;
       let problemCount = 0;
+      let currentDifficulty = 'easy';
+      let consecutiveCorrect = 0;
+      let bestScore = Number(localStorage.getItem('brainGameBestScore') || 0);
+
+      function updateStatusDisplays() {
+        const levelNames = {
+          easy: '簡単',
+          normal: 'ふつう',
+          hard: 'むずかしい'
+        };
+
+        if (levelDisplay) {
+          levelDisplay.textContent = `レベル: ${levelNames[currentDifficulty] || '簡単'}`;
+        }
+        if (streakDisplay) {
+          streakDisplay.textContent = `連続正解: ${consecutiveCorrect}`;
+        }
+        if (bestScoreDisplay) {
+          bestScoreDisplay.textContent = `最高記録: ${bestScore}`;
+        }
+        if (scoreDisplay) {
+          scoreDisplay.textContent = score;
+        }
+      }
+
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function setDifficulty(level) {
+        currentDifficulty = level;
+        updateStatusDisplays();
+        difficultyButtons.forEach((button) => {
+          const isActive = button.dataset.difficulty === level;
+          button.classList.toggle('active', isActive);
+        });
+      }
+
+      function getDifficultyFromStreak() {
+        if (consecutiveCorrect >= 4) return 'hard';
+        if (consecutiveCorrect >= 2) return 'normal';
+        return 'easy';
+      }
 
       function generateProblem() {
-        const num1 = Math.floor(Math.random() * 100) + 1;
-        const num2 = Math.floor(Math.random() * 100) + 1;
-        const operations = ['+', '-', '×'];
-        const operation = operations[Math.floor(Math.random() * operations.length)];
-        
+        const level = getDifficultyFromStreak();
+        let num1;
+        let num2;
+        let operation;
+
+        if (level === 'easy') {
+          num1 = randomInt(1, 9);
+          num2 = randomInt(1, 9);
+          const operations = ['+', '-', '×', '÷'];
+          operation = operations[Math.floor(Math.random() * operations.length)];
+        } else if (level === 'normal') {
+          num1 = randomInt(1, 9);
+          num2 = randomInt(1, 9);
+          const operations = ['+', '-', '×', '÷'];
+          operation = operations[Math.floor(Math.random() * operations.length)];
+        } else {
+          num1 = randomInt(1, 9);
+          num2 = randomInt(10, 99);
+          const operations = ['+', '-', '×', '÷'];
+          operation = operations[Math.floor(Math.random() * operations.length)];
+        }
+
         let answer;
         let display;
-        
+
         if (operation === '+') {
           answer = num1 + num2;
           display = `${num1} + ${num2} = ?`;
         } else if (operation === '-') {
-          answer = num1 - num2;
-          display = `${num1} - ${num2} = ?`;
-        } else {
+          const larger = Math.max(num1, num2);
+          const smaller = Math.min(num1, num2);
+          answer = larger - smaller;
+          display = `${larger} - ${smaller} = ?`;
+        } else if (operation === '×') {
           answer = num1 * num2;
           display = `${num1} × ${num2} = ?`;
+        } else {
+          let divisor;
+          let dividend;
+
+          if (level === 'hard') {
+            divisor = randomInt(1, 9);
+            dividend = divisor * randomInt(1, 9);
+            const value = randomInt(1, 9);
+            const multiplier = randomInt(2, 9);
+            const base = value * multiplier;
+            answer = base / multiplier;
+            display = `${base} ÷ ${multiplier} = ?`;
+          } else {
+            divisor = randomInt(1, 9);
+            dividend = divisor * randomInt(1, 9);
+            answer = dividend / divisor;
+            display = `${dividend} ÷ ${divisor} = ?`;
+          }
+
+          if (level === 'hard' && display.includes('÷')) {
+            // already prepared as a clean division problem
+          }
         }
-        
+
         return { display, answer };
       }
 
@@ -181,20 +311,31 @@
         }
 
         if (userAnswer === currentAnswer) {
+          consecutiveCorrect++;
           score++;
+          if (score > bestScore) {
+            bestScore = score;
+            localStorage.setItem('brainGameBestScore', String(bestScore));
+          }
+          setDifficulty(getDifficultyFromStreak());
           resultMessage.textContent = '🎉 正解！';
           resultMessage.style.color = '#16a34a';
-          scoreDisplay.textContent = score;
+          updateStatusDisplays();
           setTimeout(() => {
             showNextProblem();
           }, 1500);
-        } else {
-          resultMessage.textContent = `❌ 不正解（正答: ${currentAnswer}）`;
-          resultMessage.style.color = '#dc2626';
-          setTimeout(() => {
-            showNextProblem();
-          }, 1500);
+          return;
         }
+
+        consecutiveCorrect = 0;
+        if (score > 0) score--;
+        setDifficulty('easy');
+        resultMessage.textContent = `❌ 不正解（正答: ${currentAnswer}）`;
+        resultMessage.style.color = '#dc2626';
+        updateStatusDisplays();
+        setTimeout(() => {
+          showNextProblem();
+        }, 500);
       }
 
       function showGameOver() {
@@ -209,8 +350,9 @@
       function startGame() {
         score = 0;
         problemCount = 0;
+        consecutiveCorrect = 0;
+        updateStatusDisplays();
         gameContainer.style.display = 'block';
-        startGameBtn.style.display = 'none';
         answerInput.style.display = 'block';
         submitBtn.style.display = 'inline-flex';
         showNextProblem();
@@ -218,15 +360,20 @@
 
       function quitGame() {
         gameContainer.style.display = 'none';
-        startGameBtn.style.display = 'inline-flex';
         score = 0;
         problemCount = 0;
-        scoreDisplay.textContent = '0';
+        consecutiveCorrect = 0;
+        setDifficulty('easy');
+        updateStatusDisplays();
       }
 
-      if (startGameBtn) {
-        startGameBtn.addEventListener('click', startGame);
-      }
+      difficultyButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const selectedLevel = button.dataset.difficulty;
+          setDifficulty(selectedLevel);
+          startGame();
+        });
+      });
 
       if (submitBtn) {
         submitBtn.addEventListener('click', checkAnswer);
