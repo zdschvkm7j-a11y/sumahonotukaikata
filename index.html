@@ -1,119 +1,145 @@
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,
-        initial-scale=1.0">
-        <title>スマホのつかいかた</title>
-    </head>
-        <body style="background-color: aliceblue;">
-            <header>
-                <h1>スマホのつかいかた</h1>
-                <p>すまーとふぉんのきほんてきなそうさほうほうをせつめいします </p>
-            </header>
-            <main>
-                <button onclick="yomu('画面を上から下に滑らせてね')">🎙️</button>
-                <button onclick="tomeru()">⏹️</button>
-                <h2>しりたいそうさをえらんでください</h2>
-                
-            
-                 <button class="menu" onclick="yomu('明るさや文字の大きさを変更する画面を開きます', 'akarusa.html')">1. あかるさ・もじのおおきさをかえる</button>
-                
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>スマホのつかいかた</title>
+  <style>
+    body {
+      background-color: #fff8e7;
+      color: #1b1b1b;
+      font-size: 24px;
+      line-height: 1.6;
+      font-family: "Yu Gothic", "Hiragino Sans", "Meiryo", sans-serif;
+      padding: 20px;
+      margin: 0;
+    }
+    header { text-align: center; margin-bottom: 18px; }
+    h1 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 8px; color: #1a237e; }
+    p { font-size: 1.1em; margin: 0; }
+    main {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 16px;
+      align-items: stretch;
+    }
+    .menu-btn {
+      font-size: clamp(1.05rem, 2vw, 1.5rem);
+      font-weight: 700;
+      padding: 20px 18px;
+      margin: 0;
+      border: 3px solid rgba(0,0,0,0.25);
+      border-radius: 14px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+      cursor: pointer;
+      text-align: center;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      color: #fff;
+      transition: transform 0.12s ease, filter 0.12s ease;
+    }
+    .menu-btn:hover { filter: brightness(1.08); }
+    .menu-btn:active { transform: translateY(2px); }
+    .menu { background-color: #0f4c81; }
+    .kinou { background-color: #2e7d32; }
+    .kuwasiku { background-color: #ef6c00; }
+    .kiso { background-color: #6a1b9a; }
+    .ouyou { background-color: #c62828; }
+    .nou { background-color: #00838f; }
+    .import-button {
+      grid-column: 1 / -1;
+      margin-top: 18px;
+    }
+    @media (max-width: 700px) {
+      main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>スマホのつかいかた</h1>
+    <p>すまーとふぉんのきほんてきなそうさほうほうをせつめいします</p>
+  </header>
+  <main>
+    <button class="menu-btn menu" type="button" onclick="yomu('明るさや文字の大きさを変更する画面を開きます', 'akarusa.html')">1. あかるさ・もじのおおきさをかえる</button>
+    <button class="menu-btn menu" type="button" onclick="yomu('ワイファイの接続設定を開きます', 'wifi.html')">2. わいふぁいにせつぞくする</button>
+    <button class="menu-btn menu" type="button" onclick="yomu('音の大きさや着信音を変える画面を開きます', 'oto.html')">3. おとのおおきさ・ちゃくしんおんをかえる</button>
+    <button class="menu-btn menu" type="button" onclick="yomu('スマートフォンを充電する画面を開きます', 'juudenn.html')">4. すまーとふぉんをじゅうでんする</button>
+    <button class="menu-btn menu" type="button" onclick="yomu('スマートフォンの基本設定の画面を開きます', 'kihonn.html')">5. すまーとふぉんのきほんせっていをかえる</button>
+    <button class="menu-btn kinou" type="button" onclick="yomu('ラインとインスタグラムを使う画面を開きます', 'line.html')">6. らいん・いんすたぐらむをつかう</button>
+    <button class="menu-btn kinou" type="button" onclick="yomu('電話についての画面を開きます', 'dennwa.html')">7. でんわについて</button>
+    <button class="menu-btn kuwasiku" type="button" onclick="yomu('二次元コードの読み取りの画面を開きます', 'nizigenn.html')">8. にじげんこーどのよみとり</button>
+    <button class="menu-btn kuwasiku" type="button" onclick="yomu('マップの使い方の画面を開きます', 'map.html')">9. まっぷのつかいかた</button>
+    <button class="menu-btn kinou" type="button" onclick="yomu('電車の乗り換えの調べ方の画面を開きます', 'densya.html')">10. でんしゃののりかえのしらべかた</button>
+    <button class="menu-btn kuwasiku" type="button" onclick="yomu('カレンダーアラームの使い方の画面を開きます', 'karendar.html')">11. かれんだー・あらーむのつかいかた</button>
+    <button class="menu-btn kuwasiku" type="button" onclick="yomu('歩数計の使い方の画面を開きます', 'hosuukei.html')">12. ほすうけいのつかいかた</button>
+    <button class="menu-btn kiso" type="button" onclick="yomu('アプリの追加・消し方の画面を開きます', 'ap.html')">13. あぷりのついか・けしかた</button>
+    <button class="menu-btn kiso" type="button" onclick="yomu('ホーム画面の整理やり方の画面を開きます', 'seiri.html')">14. ほーむがめんのせいりやりかた</button>
+    <button class="menu-btn kiso" type="button" onclick="yomu('写真の撮り方の画面を開きます', 'syasinn.html')">15. しゃしんのとりかた</button>
+    <button class="menu-btn kiso" type="button" onclick="yomu('声で調べる方法の画面を開きます', 'koe.html')">16. こえでしらべるほうほう</button>
+    <button class="menu-btn kiso" type="button" onclick="yomu('カメラを虫眼鏡にする画面を開きます', 'kamera.html')">17. かめらをむしめがねにするほうほう</button>
+    <button class="menu-btn ouyou" type="button" onclick="yomu('パスワードの管理の画面を開きます', 'ps.html')">18. ぱすわーどのかんり</button>
+    <button class="menu-btn ouyou" type="button" onclick="yomu('スクリーンショットの取り方の画面を開きます', 'syoto.html')">19. すくりーんしょっとのとりかた</button>
+    <button class="menu-btn ouyou" type="button" onclick="yomu('災害情報の調べ方の画面を開きます', 'saigai.html')">20. さいがいじょうほうのしらべかた</button>
+    <button class="menu-btn nou import-button" type="button" onclick="goToPage('import%20random.html', '数字の順番を当てるゲームを開きます')">0. すうじゲームをはじめる</button>
+    <button class="menu-btn nou" type="button" onclick="yomu('脳トレの画面を開きます', 'noutore.html')">21. のうのとれーにんぐ</button>
+  </main>
 
-                 <button class="menu" onclick="yomu('ワイファイの接続設定を開きます', 'wifi.html')">2. わいふぁいにせつぞくする</button>
-                
-    
-                
-    <button class="menu" onclick="yomu('音の大きさ着信音を変える画面を開きます', 'oto.html')">3. おとのおおきさ・ちゃくしんおんをかえる</button>
-                
-    
+  <script>
+    function goToPage(url, text) {
+      if (!('speechSynthesis' in window) || !text) {
+        if (url) {
+          window.location.href = url;
+        }
+        return;
+      }
 
-    <button class="menu" onclick="yomu('スマートフォンを充電する画面を開きます', 'juudenn.html')">4. すまーとふぉんをじゅうでんする</button>
-    
-    
-     <button class="menu" onclick="yomu('スマートフォンの基本設定の画面を開きます', 'kihonn.html')">5. すまーとふぉんのきほんせっていをかえる</button>
+      window.speechSynthesis.cancel();
+      const speech = new SpeechSynthesisUtterance(text || '説明を待っています');
+      speech.lang = 'ja-JP';
+      speech.rate = 1;
+      speech.pitch = 1;
+      speech.volume = 1;
+      speech.onend = function () {
+        if (url) {
+          setTimeout(function () {
+            window.location.href = url;
+          }, 300);
+        }
+      };
+      window.speechSynthesis.speak(speech);
+    }
 
-    <button class="kinou" onclick="yomu('電車の乗り換えの調べ方の画面を開きます', 'densya.html')">10. でんしゃののりかえのしらべかた</button>
+    function yomu(text, url) {
+      if (!('speechSynthesis' in window)) {
+        if (url) {
+          window.location.href = url;
+        }
+        return;
+      }
 
+      window.speechSynthesis.cancel();
+      const speech = new SpeechSynthesisUtterance(text || '説明を待っています');
+      speech.lang = 'ja-JP';
+      speech.rate = 1;
+      speech.pitch = 1;
+      speech.volume = 1;
+      speech.onend = function () {
+        if (url) {
+          setTimeout(function () {
+            window.location.href = url;
+          }, 300);
+        }
+      };
+      window.speechSynthesis.speak(speech);
+    }
 
-    <button class="kinou"onclick="yomu('ライン・いんすたグラムを使うの画面を開きます', 'line.html')">6. らいん・いんすたぐらむをつかう</button>        
-
-
-    <button class="kinou" onclick="yomu('電話についての画面を開きます', 'dennwa.html')">7. でんわについて</button>
-    
-
-    <button class="kuwasiku" onclick="yomu('二次元コードの読み取りの画面を開きます', 'nizigenn.html')">8. にじげんこーどのよみとり</button>
-   <button class="kuwasiku" onclick="yomu('マップの使い方の画面を開きます', 'map.html')">9. まっぷのつかいかた</button>
-
-
-    <button class="kuwasiku" onclick="yomu('カレンダーアラームの使い方の画面を開きます', 'karendar.html')">11. かれんだー・あらーむのつかいかた</button>
-
-
-    <button class="kuwasiku" onclick="yomu('歩数計の使い方の画面を開きます', 'hosuukei.html')">12. ほすうけいのつかいかた</button>
-
-   
-<button class="kiso" onclick="yomu('アプリの追加・消し方の画面を開きます', 'ap.html')">13. あぷりのついか・けしかた</button>
-
-   <button class="kiso" onclick="yomu('ホーム画面の整理やり方の画面を開きます', 'seiri.html')">14. ほーむがめんのせいりやりかた</button>
-   <button class="kiso" onclick="yomu('写真の撮り方の画面を開きます', 'syasinn.html')">15. しゃしんのとりかた</button>
-    <button class="kiso" onclick="yomu('声で調べる方法の画面を開きます', 'koe.html')">16. こえでしらべるほうほう</button>
-        <button class="kiso" onclick="yomu('カメラを虫眼鏡にする画面を開きます', 'kamera.html')">17. かめらをむしめがねにするほうほう</button>
-       
-    <button class="ouyou" onclick="yomu('パスワードの管理の画面を開きます', 'ps.html')">18. ぱすわーどのかんり</button>
-    
-
-    <button class="ouyou" onclick="yomu('スクリーンショットの取り方の画面を開きます', 'syoto.html')">19. すくりーんしょっとのとりかた</button>
-   
-       
-    <button class="ouyou" onclick="yomu('災害情報の調べ方の画面を開きます', 'saigai.html')">20. さいがいじょうほうのしらべかた</button>
-    <button class="nou" onclick="yomu('脳トレの画面を開きます', 'noutore.html')">21. のうのとれーにんぐ</button>
-       
-        
-
-
-</main>
-        <style>
-            button {font-size: 20px;
-            padding: 15px 25px;
-        margin:  8px;}
-        .menu {background-color: darkblue ;
-        color: white;}
-        .kinou {background-color: darkgreen ;
-            color: white;}
-        .kuwasiku {background-color: darkorange ;
-                color: white;}
-        .kiso {background-color: purple ;
-                    color: white}
-        .ouyou {background-color: darkred ;
-            color: white;}
-            .nou {background-color: darkcyan ;
-                color: white;}
-            </style>
-            <script>
-                //音声を読み上げる関数
-                    function yomu(text, url) {
-                   const speech = new SpeechSynthesisUtterance(text);
-                    speech.lang = "ja-JP";
-                    speechSynthesis.cancel()
-                    
-                    //喋り終わったらページを移動する処理
-                    if (url) {
-                        speech.onend = function(){
-                       location.href = url;
-                    };
-                    
-                  }
-                    speechSynthesis.speak(speech);
-                    }
-                  function tomeru() {
-                    speechSynthesis.cancel();
-
-                  }
-            </script>
-                
-             <meta name="google-site-verification" content="QzmmsxvymGfKgmkJEFkudOy0KYQOsjKP_xQUgkJ2IsQ" />   
-    
-        </body>
-     
-    
+    function tomeru() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+  </script>
+</body>
 </html>

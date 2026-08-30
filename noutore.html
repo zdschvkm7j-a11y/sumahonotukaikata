@@ -1,469 +1,241 @@
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>すうじのじゅうんばんにおそう</title>
-        <style>
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-                user-select: none;
-                -webkit-user-select: none;
-            }
-            body{
-                font-family: 'Helvetica, Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragono Sans', Meriyo, sans-serif;
-                background-color: #eef3f8;
-                color: #102a43;
-                font-size: 18px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                min-height: 100vh;
-                padding: 20px; 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>のうのとれーにんぐ</title>
+  <style>
+    :root {
+      --bg: #eef7ff;
+      --panel: #ffffff;
+      --line: #2d4d8a;
+      --text: #1d2433;
+      --primary: #1e5bd7;
+      --primary-dark: #143f9d;
+      --danger: #dc2626;
+      --danger-dark: #b91c1c;
+      --btn-text: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(180deg, var(--bg) 0%, #f9fbff 100%);
+      color: var(--text);
+      font-family: "Yu Gothic", "Hiragino Sans", "Meiryo", sans-serif;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 12px 18px;
+      border-radius: 10px;
+      background: #dddddd;
+      color: #111;
+      text-decoration: none;
+      font-size: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 12px 0 20px;
+    }
+    .action-btn {
+      appearance: none;
+      border: 3px solid rgba(0,0,0,0.18);
+      border-radius: 16px;
+      background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+      color: var(--btn-text);
+      font-size: clamp(1.15rem, 2vw, 1.6rem);
+      font-weight: 700;
+      padding: 20px 26px;
+      min-height: 74px;
+      min-width: 180px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(30,64,175,0.18);
+      transition: transform 0.12s ease, filter 0.12s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .action-btn:hover { filter: brightness(1.08); }
+    .action-btn:active { transform: translateY(2px) scale(0.99); }
+    .stop-btn {
+      background: linear-gradient(180deg, var(--danger), var(--danger-dark));
+      box-shadow: 0 6px 15px rgba(185,28,28,0.18);
+    }
+    h1 {
+      font-size: clamp(1.9rem, 3vw, 2.6rem);
+      margin: 12px 0 18px;
+    }
+    h2 {
+      margin-top: 26px; 
+      margin-bottom: 12px;
+      font-size: clamp(1.45rem, 2.5vw, 2.1rem);
+    }
+    p { margin: 10px 0; }
+    hr { margin: 20px 0; }
+    @media (max-width: 600px) {
+      body { padding: 15px; }
+      .button-row { display: grid; grid-template-columns: 1fr; }
+      .action-btn { width: 100%; min-width: 0; }
+    }
+  </style>
+</head>
+<body>
 
-            }
-            .headertitle {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                margin-top: 10px;
-                margin-bottom: 4px;
+  <a href="index.html" class="back-link">⬅️ もとのがめんにもどる</a>
+  <h1>1. のうのとれーにんぐ</h1>
 
-            }
-            .title-char{
-                width: 20px;
-                height: 50px;  
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 26px;
-                font-weight: bold;
+  <div class="button-row">
+    <button type="button" class="action-btn" id="start-game-btn">🎮 ゲーム開始</button>
+  </div>
+
+  <div id="game-container" style="display:none;">
+    <div style="background: #ffffff; border: 3px solid #2d4d8a; border-radius: 18px; padding: 30px; margin: 20px 0; box-shadow: 0 10px 24px rgba(26, 77, 166, 0.12);">
+      <h2 id="problem-text" style="font-size: 2rem; text-align: center; margin: 20px 0; color: #1e5bd7;">問題が表示されます</h2>
+      <div id="score-display" style="text-align: center; font-size: 1.5rem; color: #113d8f; margin-bottom: 20px;">スコア: <span id="score">0</span>/10</div>
+      
+      <div style="background: #eef7ff; border-radius: 12px; padding: 20px; margin: 20px 0;">
+        <p style="font-size: 1.3rem; text-align: center; margin: 10px 0;">答え：</p>
+        <input type="number" id="answer-input" placeholder="答えを入力してください" style="width: 100%; padding: 15px; font-size: 1.2rem; border: 2px solid #1e5bd7; border-radius: 8px; text-align: center;">
+      </div>
+
+      <div class="button-row" style="justify-content: center;">
+        <button type="button" class="action-btn" id="submit-btn">✅ 回答する</button>
+        <button type="button" class="action-btn stop-btn" id="quit-btn">⏹️ やめる</button>
+      </div>
+
+      <div id="result-message" style="font-size: 1.5rem; text-align: center; margin-top: 20px; color: #1e5bd7; min-height: 30px; font-weight: bold;"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const startGameBtn = document.getElementById('start-game-btn');
+      const gameContainer = document.getElementById('game-container');
+      const problemText = document.getElementById('problem-text');
+      const answerInput = document.getElementById('answer-input');
+      const submitBtn = document.getElementById('submit-btn');
+      const quitBtn = document.getElementById('quit-btn');
+      const resultMessage = document.getElementById('result-message');
+      const scoreDisplay = document.getElementById('score');
+      
+      let currentProblem = null;
+      let currentAnswer = null;
+      let score = 0;
+      let totalProblems = 10;
+      let problemCount = 0;
+
+      function generateProblem() {
+        const num1 = Math.floor(Math.random() * 100) + 1;
+        const num2 = Math.floor(Math.random() * 100) + 1;
+        const operations = ['+', '-', '×'];
+        const operation = operations[Math.floor(Math.random() * operations.length)];
         
-                border-radius: 4px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-            .char-gray{
-                background-color: #52606d;
-                color: #fff;}
-            .char-pink{
-                background-color: #007c91;
-                color: #fff;
+        let answer;
+        let display;
+        
+        if (operation === '+') {
+          answer = num1 + num2;
+          display = `${num1} + ${num2} = ?`;
+        } else if (operation === '-') {
+          answer = num1 - num2;
+          display = `${num1} - ${num2} = ?`;
+        } else {
+          answer = num1 * num2;
+          display = `${num1} × ${num2} = ?`;
         }
-        .subtitle{
-            font-size: 18px;
-            color: #8a1c1c;
-            margin-bottom: 20px;
-        font-weight: bold;
+        
+        return { display, answer };
+      }
+
+      function showNextProblem() {
+        if (problemCount >= totalProblems) {
+          showGameOver();
+          return;
         }
-        .description{
-            font-size: 18px;
-            color: #243b53;
-            margin-bottom: 20px;
-            text-align: center;
-            line-height: 1.5;
+
+        problemCount++;
+        currentProblem = generateProblem();
+        currentAnswer = currentProblem.answer;
+        problemText.textContent = currentProblem.display;
+        answerInput.value = '';
+        resultMessage.textContent = '';
+        resultMessage.style.color = '#1e5bd7';
+        answerInput.focus();
+        scoreDisplay.textContent = score;
+      }
+
+      function checkAnswer() {
+        const userAnswer = parseInt(answerInput.value);
+        
+        if (isNaN(userAnswer)) {
+          resultMessage.textContent = '数字を入力してください';
+          resultMessage.style.color = '#dc2626';
+          return;
         }
-        .game-card{
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 400px;
-display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 3px solid #005a9c;
+
+        if (userAnswer === currentAnswer) {
+          score++;
+          resultMessage.textContent = '🎉 正解！';
+          resultMessage.style.color = '#16a34a';
+          scoreDisplay.textContent = score;
+          setTimeout(() => {
+            showNextProblem();
+          }, 1500);
+        } else {
+          resultMessage.textContent = `❌ 不正解（正答: ${currentAnswer}）`;
+          resultMessage.style.color = '#dc2626';
+          setTimeout(() => {
+            showNextProblem();
+          }, 1500);
         }
-.config-view{
-    width: 100px;
-    display: flex;
-    flex-direction: column;
-text-align: center;
-}
-.config-title{
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 1.6;
-    color: #8a1c1c;
-    margin-bottom: 20px;
-}
-.select-group{
-    display: flex;
-    gap: 15px;
-    margin-bottom: 25px;
-    width: 100%;
-    justify-content: center;
-}
-.costom-select{
-    background-color: #ffffff;
-    border: 2px solid #243b53;
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #102a43;
-    cursor: pointer;
-    outline: none;}
-    .botton-red{
-        background-color: #b42318;
-        border-radius: 8px;
-        padding: 12px 45px;
-        font-size: 22px;
-        font-weight: bold;
-        color: #ffffff;
-        border: 2px solid #000000;
-        cursor: pointer;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: background-color 0.3s, transform 0.2s;
-           }
-           .botton-red:active {
-            background-color: #7a271a;
-            transform: translateY(2px);
-           }
-           .play-view{
-            width: 100%;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-           }
-           .game-status-bar{
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #fffffe;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-weight: bold;
-           }
-           .next-targrt{
-            font-size: 18px;
-            color: #102a43;
-            
-           }     
-           .time-display{
-            font-size: 20px;
-            color: #b42318;
-            font-family: monospace;
-           }   
-           .round-info{
-            font-size: 18px;
-            color: #005252;
-           }
-           .grid-board{
-            display: grid;
-            gap:8px;
-            width: 100%;
-                    max-width: 400px;
-            aspect-ratio: 1;
-            margin-bottom: 15px;
-           }
-.grid-cell{
-    background-color: #ffffff;
-    border: 3px solid #243b53;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #102a43; cursor: pointer;
-    box-shadow: 0 3px 0 #102a43;
-    transition: all 0.08s ease;
-    touch-action: manipulation;
+      }
 
-}
-.grid-cell.small-number {
-    font-size: 22px;
-}
-.grid-cell:active{
-    transform: translateY(2px);
-    box-shadow: 0 1px 0 #000000;
-}
-.grid-cell.pressed{
-    background-color: #d9e2ec;
-    color: #52606d;
-    border-color: #7b8794;
-    box-shadow: none;
-    cursor: default;
-    transform: translateY(3px);
-pointer-events: none;
-}
-.grid-cell.wrong{
-    animation: shake 0.3s;
-    background-color: #fff3b0;
-    border-color: #b7791f;
-}
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-}.button-secondary{
-    background-color: #ffffff;
-    border-radius: 6px;
-    padding: 8px 14px;
-    font-size: 18px;
-    color: #102a43;
-    border: 2px solid #243b53;
-    cursor: pointer;
-}
-.button-secondary:active{
-    transform: translateY(1px);
-}
-    .result-view{
-        width: 100%;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    .result-title{
-        font-size: 24px;
-        font-weight: bold;
-        color: #005a9c;
-        margin-bottom: 15px;
-    }
-    .result-label{
-        font-size: 36px;
-        color: #b42318;}
-        .result-score{
-            font-size: 48px;
-            font-weight: bold;
-            color: #102a43;
-            margin-bottom: 20px;
-            font-family: monospace;
-        }
-.result-detail{
-    font-size: 18px;
-    color: #243b53;
-background-color: #ffffff;
-padding: 12px;
-border-radius: 8px;
-width: 100%;
-margin-bottom: 20px;
-text-align: left;
-}
-@media (max-width: 600px) {
-    .headertitle {
-        gap: 5px;
-    }
-    .title-char {
-        width: 38px;
-        height: 44px;
-        font-size: 20px;
-    }
-    .game-card {
-        padding: 20px 15px;
-    }
-    
-        .costom-select {
-            padding: 8px 12px;
-            font-size: 18px;       
-    }
-.grid-cell {
-    font-size: 24px;}
-    .grid-board {
-        gap: 6px;
-    }
-}
-</style>
-    </head>
-    <body>
-        <div class="headertitle">
-            <div class="title-char char-gray">す</div>
-            <div class="title-char char-pink">う</div>
-            <div class="title-char char-gray">じ</div>
-            <div class="title-char char-pink">の</div>
-            <div class="title-char char-gray">じ</div>
-            <div class="title-char char-pink">ゅ</div>
-            <div class="title-char char-gray">う</div>
-            <div class="title-char char-pink">ん</div>
-            <div class="title-char char-gray">ば</div>
-            <div class="title-char char-pink">ん</div>
-            <div class="title-char char-gray">に</div>
-            <div class="title-char char-pink">お</div>
-            <div class="title-char char-gray">そ</div>
-            <div class="title-char char-pink">う</div>
-        </div>
-        <div class="sub-title">げーむ</div>
-        <div class="subtitle">すうじをじゅんばんにおしていくゲーム</div>
-        <div class="game-card">
-            <div id="configView"
-            class="config-view">
-            <div class="config-title">せっていしてかいし</div>
-            </div>
-            <div class="select-group">
-                <select id="gridSizeSelect" class="costom-select">
-                    <option value="3">3×3</option>
-                    <option value="4">4×4</option>
-                    <option value="5">5×5</option>
-                </select>
-                <select id="roundsSelect" class="costom-select">
-                    <option value="1">1かい</option>
-                    <option value="2">2かい</option>
-                    <option value="3">3かい</option>
-                </select>
-            </div>
-            <div class="play-view" id="playView">
-                <div class="game-status-bar">
-                    <div class="next-targrt">つぎ: <span id="nextTarget">1</span></div>
-                    <div class="time-display" id="timeDisplay">00:00</div>
-                    <div class="round-info" id="roundInfo">1/1</div>
-                </div>
-                <div class="grid-board" id="gridBoard"></div>
-            <button id="giveUpButton" class="button-secondary">あきらめる</button>
-            </div>
-            <div class="result-view" id="resultView">
-                <div class="result-title">けっか</div>
-                <div class="result-label">じかん</div>
-                <div class="result-score" id="finalTime">00:00</div>
-                <div class="result-detail" id="resultDetail"></div>
-                <button id="restartButton" class="botton-red">さいしょから</button>
-            </div>
-        </div>
-        <script>
-            function speakText(text) {
-                if (!('speechSynthesis' in window)) return;
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'ja-JP';
-                utterance.rate = 0.9;
-                window.speechSynthesis.speak(utterance);
-            }
+      function showGameOver() {
+        problemText.textContent = 'ゲーム終了！';
+        answerInput.style.display = 'none';
+        submitBtn.style.display = 'none';
+        resultMessage.textContent = `最終スコア: ${score}/${totalProblems}`;
+        resultMessage.style.color = '#1e5bd7';
+        resultMessage.style.fontSize = '1.8rem';
+      }
 
-            let totalCells = 16;
-            let totalRounds = 2;
-            let currentRound = 1;
-            let nextTarget = 1;
-            let startTime;
-            let timerInterval=null;
-            let roundTimes = [];
-            const configView = document.getElementById('configView');
-            const playView = document.getElementById('playView');
-            const resultView = document.getElementById('resultView');
-            const gridSizeSelect = document.getElementById('gridSizeSelect');
-            const roundsSelect = document.getElementById('roundsSelect');
-            const giveUpButton = document.getElementById('giveUpButton');
-            const restartButton = document.getElementById('restartButton');
-            const roundDisplay = document.getElementById('roundInfo');
-            const nextTargetDisplay = document.getElementById('nextTarget');
-            const timeDisplay = document.getElementById('timeDisplay');
-            const gridBoard = document.getElementById('gridBoard');
-            const finalTimeDisplay = document.getElementById('finalTime');
-            const resultDetailDisplay = document.getElementById('resultDetail');
-            function startGame() {
-                totalCells = parseInt(gridSizeSelect.value) ** 2;
-                totalRounds = parseInt(roundsSelect.value);
-                currentRound = 1;
-                roundTimes = [];
-                configView.style.display = 'none';
-                playView.style.display = 'flex';
-                resultView.style.display = 'none';
-                document.getElementById('startButton').style.display = 'none';
-                startRound();
-            }
+      function startGame() {
+        score = 0;
+        problemCount = 0;
+        gameContainer.style.display = 'block';
+        startGameBtn.style.display = 'none';
+        answerInput.style.display = 'block';
+        submitBtn.style.display = 'inline-flex';
+        showNextProblem();
+      }
 
-            function startRound() {
-                nextTarget = 1;
-                roundDisplay.textContent = `${currentRound}/${totalRounds}`;
-                nextTargetDisplay.textContent = nextTarget;
-                timeDisplay.textContent = '00:00';
-                const gridSize = Math.sqrt(totalCells);
-                gridBoard.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
-                generateGrid();
-                const roundMessage = currentRound === 1
-                    ? 'スタートします'
-                    : `ラウンド${currentRound}`;
-                speakText(roundMessage);
-                startTime = Date.now();
-                if (timerInterval) clearInterval(timerInterval);
-                timerInterval = setInterval(updateTimer, 100);
-            }
+      function quitGame() {
+        gameContainer.style.display = 'none';
+        startGameBtn.style.display = 'inline-flex';
+        score = 0;
+        problemCount = 0;
+        scoreDisplay.textContent = '0';
+      }
 
-            function generateGrid() {
-                const numbers = Array.from({length: totalCells}, (_, index) => index + 1);
-                for (let index = numbers.length - 1; index > 0; index--) {
-                    const randomIndex = Math.floor(Math.random() * (index + 1));
-                    [numbers[index], numbers[randomIndex]] = [numbers[randomIndex], numbers[index]];
-                }
+      if (startGameBtn) {
+        startGameBtn.addEventListener('click', startGame);
+      }
 
-                gridBoard.innerHTML = '';
-                numbers.forEach(number => {
-                    const cell = document.createElement('div');
-                    cell.classList.add('grid-cell');
-                    cell.textContent = number;
-                    if (totalCells === 25) cell.classList.add('small-number');
-                    cell.addEventListener('click', () => handleCellClick(cell, number));
-                    gridBoard.appendChild(cell);
-                });
-            }
+      if (submitBtn) {
+        submitBtn.addEventListener('click', checkAnswer);
+      }
 
-            function updateTimer() {
-                const elapsedTime = Date.now() - startTime;
-                const minutes = Math.floor(elapsedTime / 60000);
-                const seconds = Math.floor((elapsedTime % 60000) / 1000);
-                timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-            function handleCellClick(cell, num) {
-                if (num === nextTarget) {
-                    cell.classList.add('pressed');
-                    nextTarget++;
-                    nextTargetDisplay.textContent = nextTarget;
-                    if (nextTarget > totalCells) {
-                        clearInterval(timerInterval);
-                        const elapsedTime = Date.now() - startTime;
-                        roundTimes.push(elapsedTime);
-                        if (currentRound < totalRounds) {
-                            currentRound++;
-                            startRound();
-                        } else {
-                            showResults();
-                        }
-                    }
-                } else {
-                    cell.classList.add('wrong');
-                    setTimeout(() => cell.classList.remove('wrong'), 300);
-                }
-            }
-
-            restartButton.addEventListener('click', startGame);
-            giveUpButton.addEventListener('click', giveUp);
-            function giveUp() {
-                speakText('あきらめました');
-                clearInterval(timerInterval);
-                roundTimes.push(null);
-                if (currentRound < totalRounds) {
-                    currentRound++;
-                    startRound();
-                } else {
-                    showResults();
-                }
-            }
-            function showResults() {
-                playView.style.display = 'none';
-                resultView.style.display = 'flex';
-                const totalTime = roundTimes.reduce((acc, time) => acc + (time || 0), 0);
-                const minutes = Math.floor(totalTime / 60000);
-                const seconds = Math.floor((totalTime % 60000) / 1000);
-                finalTimeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                resultDetailDisplay.innerHTML = roundTimes.map((time, index) => {
-                    if (time === null) return `Round ${index + 1}: あきらめた`;
-                    const min = Math.floor(time / 60000);
-                    const sec = Math.floor((time % 60000) / 1000);
-                    return `Round ${index + 1}: ${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-                }).join('<br>');
-                speakText(`ゲームがおわりました。タイムは${minutes}分${seconds}秒です`);
-            }
-
-            
-            </script>
-            
-
-        <button type="button" id="startButton" onclick="startGame()">スタート開始</button>
-    </body>
+      if (quitBtn) {
+        quitBtn.addEventListener('click', quitGame);
+      }
+    })();
+  </script>
+</body>
 </html>

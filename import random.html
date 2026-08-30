@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>数字を順番に押すゲーム</title>
+  <style>
+    :root {
+      --bg: #f5f7ff;
+      --panel: #ffffff;
+      --accent: #dfefff;
+      --ok: #b7f0b5;
+      --text: #1c2430;
+      --muted: #425062;
+      --soft: #f9d9ff;
+      --primary: #2e6bd6;
+      --primary-strong: #1847ad;
+      --purple: #7d5ad8;
+      --gold: #ffd76a;
+      --warning: #ffb347;
+      --success: #1d9d5a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #edf5ff 0%, #f8f0ff 100%);
+      font-family: "Meiryo", "Yu Gothic", sans-serif;
+      color: var(--text);
+      padding: clamp(10px, 3vw, 20px);
+      overflow-x: hidden;
+    }
+
+    .screen {
+      width: min(92vw, 620px);
+      max-width: 100%;
+      background: var(--panel);
+      border-radius: 24px;
+      box-shadow: 0 18px 38px rgba(28, 36, 48, 0.18);
+      padding: 22px 18px 20px;
+      border: 3px solid #d9e7ff;
+      position: relative;
+    }
+
+    .hidden { display: none; }
+
+    .title {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 900;
+      margin: 8px 0 18px;
+      letter-spacing: 0.06em;
+      color: var(--primary-strong);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 19px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .select-panel {
+      display: grid;
+      gap: 18px;
+      padding: 14px 10px 8px;
+    }
+
+    .option-box {
+      background: #f8fbff;
+      border: 3px solid #dfeaff;
+      border-radius: 18px;
+      padding: 18px 16px;
+      text-align: center;
+    }
+
+    .shake {
+      animation: shake 0.35s ease-in-out;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-7px); }
+      80% { transform: translateX(7px); }
+      100% { transform: translateX(0); }
+    }
+
+    .option-box label {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .big-select {
+      width: 100%;
+      max-width: 220px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 2px solid #cbdcff;
+      background: white;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .big-btn {
+      display: block;
+      margin: 20px auto 0;
+      min-width: 220px;
+      padding: 18px 28px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #bfe0ff 0%, #5f9df7 100%);
+      color: #0f2450;
+      font-size: 24px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 0 #3d76d8;
+    }
+
+    .big-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 #3d76d8;
+    }
+
+    .status {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 900;
+      margin: 10px 0 18px;
+      min-height: 36px;
+      color: var(--primary-strong);
+    }
+
+    .board {
+      display: grid;
+      justify-content: center;
+      gap: 0;
+      margin: 12px auto 18px;
+      padding: 0;
+      background: #edf4ff;
+      border-radius: 0;
+      overflow: hidden;
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .cell {
+      border: none;
+      border-radius: 0;
+      background: #ffffff;
+      color: #11213a;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 1px #dfe7f5;
+      transition: transform 0.08s ease, background 0.2s ease, box-shadow 0.2s ease;
+      margin: 0;
+      padding: 0;
+      line-height: 1;
+      font-size: 58px;
+      display: block;
+      flex: 0 0 auto;
+    }
+
+    .cell:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: #f8fbff;
+    }
+
+    .cell:disabled {
+      cursor: default;
+      opacity: 1;
+    }
+
+    .cell.correct {
+      background: var(--ok);
+      box-shadow: inset 0 0 0 2px #9bd39d;
+    }
+
+    .top-back-btn {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: #f7e7ff;
+      box-shadow: 0 4px 0 #e8d3ff;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      color: #0f2450;
+      z-index: 10;
+    }
+
+    .top-back-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #e8d3ff;
+    }
+
+    .bottom-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .reset-btn {
+      padding: 14px 22px;
+      border: none;
+      border-radius: 14px;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      color: #0f2450;
+      background: #dfefff;
+      box-shadow: 0 6px 0 #bed7ff;
+    }
+
+    .reset-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #bed7ff;
+    }
+
+    .index-btn {
+      background: linear-gradient(180deg, #d7f4d7 0%, #8ad28f 100%);
+      box-shadow: 0 6px 0 #64af6a;
+      padding: 14px 22px;
+      border: none;
+      border-radius: 14px;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      color: #0f2450;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .index-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #64af6a;
+    }
+
+    .result-box {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 8px 10px 10px;
+      text-align: center;
+      margin: 12px auto 18px;
+      color: #3a2d00;
+      width: min(100%, 520px);
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      box-shadow: none;
+    }
+
+    .result-box h2 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.1;
+      color: #1d4200;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .result-stats {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 12px;
+      width: auto;
+      flex-wrap: wrap;
+    }
+
+    .result-stat {
+      flex: 0 0 auto;
+      min-width: 170px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      text-align: center;
+    }
+
+    .result-stat-label {
+      display: block;
+      font-size: 16px;
+      font-weight: 800;
+      color: #5f4a00;
+      margin-bottom: 2px;
+    }
+
+    .result-stat-value {
+      display: block;
+      font-size: 30px;
+      font-weight: 900;
+      color: #1d2c55;
+      line-height: 1.1;
+    }
+
+    .sparkle {
+      position: absolute;
+      pointer-events: none;
+      font-size: 28px;
+      animation: floatUp 1.6s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.8);
+      }
+      20% { opacity: 1; }
+      100% {
+        opacity: 0;
+        transform: translateY(-70px) scale(1.3);
+      }
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.15); }
+      50% { transform: scale(0.96); }
+      100% { transform: scale(1); }
+    }
+
+    .celebrate {
+      animation: pop 0.6s ease;
+    }
+  </style>
+</head>
+<body>
+  <div id="selectScreen" class="screen">
+    <button id="selectBackBtn" class="top-back-btn" type="button">← もどる</button>
+    <div class="title">数字であそぼう！</div>
+    <div class="subtitle">ゲームの難しさをえらぼう</div>
+
+    <div class="select-panel">
+      <div class="option-box">
+        <label for="boardSize">ボードサイズ</label>
+        <select id="boardSize" class="big-select">
+          <option value="3">3×3</option>
+          <option value="4">4×4</option>
+          <option value="5">5×5</option>
+        </select>
+      </div>
+
+      <div class="option-box">
+        <label for="round">ラウンド</label>
+        <select id="round" class="big-select">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </div>
+    </div>
+
+    <button id="startBtn" class="big-btn" type="button">スタート</button>
+  </div>
+
+  <div id="gameScreen" class="screen hidden">
+    <button id="topBackBtn" class="top-back-btn" type="button">← もどる</button>
+    <div id="status" class="status">ラウンド1: 1から順に押してね</div>
+    <div id="board" class="board" aria-label="数字の盤面"></div>
+
+    <div class="bottom-actions">
+      <button id="resetBtn" class="reset-btn" type="button">やり直す</button>
+    </div>
+  </div>
+
+  <script>
+    const selectScreen = document.getElementById('selectScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const statusEl = document.getElementById('status');
+    const boardEl = document.getElementById('board');
+    const boardSizeEl = document.getElementById('boardSize');
+    const roundEl = document.getElementById('round');
+    const startBtn = document.getElementById('startBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const topBackBtn = document.getElementById('topBackBtn');
+    const selectBackBtn = document.getElementById('selectBackBtn');
+
+    const state = {
+      boardSize: 4,
+      round: 1,
+      target: 1,
+      numbers: [],
+      startTime: 0,
+      totalElapsed: 0,
+      playCount: 0,
+      roundResults: [],
+      timerId: null
+    };
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function updateStatus(message) {
+      statusEl.textContent = `ラウンド${state.round}: ${message}`;
+    }
+
+    function setBoardSize() {
+      state.boardSize = Number(boardSizeEl.value || 3);
+      if (![3, 4, 5].includes(state.boardSize)) {
+        state.boardSize = 3;
+      }
+      boardSizeEl.value = String(state.boardSize);
+    }
+
+    function createSparkles() {
+      const colors = ['✨', '⭐', '🎉', '🌟'];
+      const container = gameScreen;
+      for (let i = 0; i < 12; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.textContent = colors[i % colors.length];
+        sparkle.style.left = `${Math.random() * 80 + 10}%`;
+        sparkle.style.top = `${Math.random() * 50 + 18}%`;
+        sparkle.style.animationDelay = `${i * 0.08}s`;
+        container.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 1600);
+      }
+    }
+
+    function showResult() {
+      const totalSeconds = ((performance.now() - state.startTime) / 1000).toFixed(1);
+      const avgSeconds = (state.roundResults.length ? state.roundResults.reduce((sum, v) => sum + v, 0) / state.roundResults.length : 0).toFixed(1);
+
+      const resultBox = document.createElement('div');
+      resultBox.className = 'result-box';
+      resultBox.innerHTML = `
+        <h2>クリア！</h2>
+        <div class="result-stats">
+          <div class="result-stat">
+            <span class="result-stat-label">合計時間</span>
+            <span class="result-stat-value">${totalSeconds}秒</span>
+          </div>
+          <div class="result-stat">
+            <span class="result-stat-label">平均時間</span>
+            <span class="result-stat-value">${avgSeconds}秒</span>
+          </div>
+        </div>
+      `;
+
+      const currentBoard = document.getElementById('board');
+      currentBoard.innerHTML = '';
+      currentBoard.appendChild(resultBox);
+      currentBoard.classList.add('celebrate');
+      createSparkles();
+    }
+
+    function getResponsiveCellSize() {
+      const maxBoardWidth = Math.min(window.innerWidth * 0.8, 520);
+      return Math.max(52, Math.floor(maxBoardWidth / state.boardSize));
+    }
+
+    function buildBoard() {
+      boardEl.innerHTML = '';
+      const cellSize = getResponsiveCellSize();
+      const gap = 0;
+      boardEl.style.gridTemplateColumns = `repeat(${state.boardSize}, ${cellSize}px)`;
+      boardEl.style.gridTemplateRows = `repeat(${state.boardSize}, ${cellSize}px)`;
+      boardEl.style.gap = `${gap}px`;
+      boardEl.style.width = `${state.boardSize * cellSize}px`;
+      boardEl.style.height = `${state.boardSize * cellSize}px`;
+      boardEl.classList.remove('celebrate');
+
+      const size = state.boardSize * state.boardSize;
+      state.numbers = shuffle(Array.from({ length: size }, (_, i) => i + 1));
+      state.target = 1;
+      state.startTime = performance.now();
+      updateStatus('1から順に押してね');
+
+      const fontSize = `${Math.max(20, Math.min(58, cellSize * 0.56))}px`;
+
+      state.numbers.forEach((value) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'cell';
+        button.textContent = value;
+        button.style.width = `${cellSize}px`;
+        button.style.height = `${cellSize}px`;
+        button.style.fontSize = fontSize;
+        button.addEventListener('click', () => onClick(value, button));
+        boardEl.appendChild(button);
+      });
+    }
+
+    function onClick(value, button) {
+      if (value !== state.target) {
+        updateStatus('ちがうよ！ そのまま続けてね');
+        button.classList.remove('shake');
+        void button.offsetWidth;
+        button.classList.add('shake');
+        button.animate([
+          { transform: 'scale(1)' },
+          { transform: 'scale(1.08)' },
+          { transform: 'scale(1)' }
+        ], { duration: 180 });
+        return;
+      }
+
+      button.disabled = true;
+      button.classList.add('correct');
+      state.target += 1;
+
+      if (state.target > state.boardSize * state.boardSize) {
+        const elapsed = ((performance.now() - state.startTime) / 1000).toFixed(1);
+        state.roundResults.push(Number(elapsed));
+        updateStatus('クリア！ すべて押せたよ！');
+        setTimeout(() => showResult(), 200);
+        return;
+      }
+
+      updateStatus(`次は ${state.target} を押してね`);
+    }
+
+    function startGame() {
+      setBoardSize();
+      state.round = clamp(Number(roundEl.value), 1, 3);
+      state.playCount += 1;
+      selectScreen.classList.add('hidden');
+      gameScreen.classList.remove('hidden');
+      buildBoard();
+    }
+
+    function showSelectScreen() {
+      boardEl.classList.remove('celebrate');
+      gameScreen.classList.add('hidden');
+      selectScreen.classList.remove('hidden');
+    }
+
+    function goToIndex() {
+      window.location.href = 'index.html';
+    }
+
+    startBtn.addEventListener('click', startGame);
+    resetBtn.addEventListener('click', buildBoard);
+    topBackBtn.addEventListener('click', goToIndex);
+    selectBackBtn.addEventListener('click', goToIndex);
+
+    setBoardSize();
+    roundEl.value = '1';
+  </script>
+</body>
+</html>
