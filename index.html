@@ -8,42 +8,47 @@
     body {
       background-color: #fff8e7;
       color: #1b1b1b;
-      font-size: 24px;
-      line-height: 1.6;
+      font-size: 28px;
+      line-height: 1.7;
       font-family: "Yu Gothic", "Hiragino Sans", "Meiryo", sans-serif;
       padding: 20px;
       margin: 0;
     }
-    header { text-align: center; margin-bottom: 18px; }
-    h1 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 8px; color: #1a237e; }
-    p { font-size: 1.1em; margin: 0; }
+    header { text-align: center; margin-bottom: 28px; }
+    h1 { font-size: clamp(2.2rem, 4.5vw, 3.2rem); margin-bottom: 14px; color: #1a237e; }
+    p { font-size: 1.25em; margin: 0; }
     main {
       display: grid;
-      grid-template-columns: repeat(3, minmax(180px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(3, minmax(200px, 1fr));
+      gap: 24px;
       align-items: stretch;
     }
     .menu-btn {
-      font-size: clamp(1.05rem, 2vw, 1.5rem);
+      font-size: clamp(1.2rem, 2.8vw, 1.8rem);
       font-weight: 700;
-      padding: 20px 18px;
+      padding: 26px 22px;
       margin: 0;
       border: 3px solid rgba(0,0,0,0.25);
-      border-radius: 14px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+      border-radius: 18px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
       cursor: pointer;
       text-align: center;
-      height: 120px;
+      height: 150px;
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
       box-sizing: border-box;
       color: #fff;
-      transition: transform 0.12s ease, filter 0.12s ease;
+      transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
+      touch-action: manipulation;
     }
-    .menu-btn:hover { filter: brightness(1.08); }
-    .menu-btn:active { transform: translateY(2px); }
+    .menu-btn:hover { 
+      filter: brightness(1.1); 
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      transform: translateY(-2px);
+    }
+    .menu-btn:active { transform: translateY(0px); }
     .menu { background-color: #0f4c81; }
     .kinou { background-color: #2e7d32; }
     .kuwasiku { background-color: #ef6c00; }
@@ -52,10 +57,12 @@
     .nou { background-color: #00838f; }
     .import-button {
       grid-column: auto;
-      margin-top: 18px;
+      margin-top: 24px;
     }
     @media (max-width: 700px) {
-      main { grid-template-columns: 1fr; }
+      body { font-size: 26px; }
+      main { grid-template-columns: 1fr; gap: 20px; }
+      .menu-btn { height: 140px; padding: 24px 20px; }
     }
   </style>
 </head>
