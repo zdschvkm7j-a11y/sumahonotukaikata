@@ -33,11 +33,12 @@
       box-shadow: 0 3px 6px rgba(0,0,0,0.12);
       cursor: pointer;
       text-align: center;
-      min-height: 90px;
+      height: 120px;
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
+      box-sizing: border-box;
       color: #fff;
       transition: transform 0.12s ease, filter 0.12s ease;
     }
@@ -50,7 +51,7 @@
     .ouyou { background-color: #c62828; }
     .nou { background-color: #00838f; }
     .import-button {
-      grid-column: 1 / -1;
+      grid-column: auto;
       margin-top: 18px;
     }
     @media (max-width: 700px) {
