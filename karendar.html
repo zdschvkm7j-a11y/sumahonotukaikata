@@ -1,52 +1,171 @@
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
-<meta charset="UTF-8">
-<meta name="viewport"content="width=device-width
-,initial-scale=1.0">
-<title>かれんだー・あらーむのつかいかた</title>
-    </head>
-    <body style="background-color: aliceblue; 
-    font-family: sans-serif; font-size: 20px;">
-    
-<a href="index.html" style="font-size: 22px; text-decoration: none;
- background-color:  #ddd; padding: 10px 15px; border-radius: 8px;
-  color: black; display: inline-block; margin-bottom: 20px;">
-  ⬅️ もとのがめんにもどる
-</a>
-<h1>1. かれんだー・あらーむのつかいかた</h1>
-<dev style="margin: 30px;"></dev>
-<button onclick="yomu('かれんだーあらーむの')"
->🎙️ 説明を聞く</button>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>かれんだー・あらーむのつかいかた</title>
+  <style>
+    :root {
+      --bg: #eef7ff;
+      --panel: #ffffff;
+      --line: #2d4d8a;
+      --text: #1d2433;
+      --primary: #1e5bd7;
+      --primary-dark: #143f9d;
+      --danger: #dc2626;
+      --danger-dark: #b91c1c;
+      --btn-text: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(180deg, var(--bg) 0%, #f9fbff 100%);
+      color: var(--text);
+      font-family: "Yu Gothic", "Hiragino Sans", "Meiryo", sans-serif;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 12px 18px;
+      border-radius: 10px;
+      background: #dddddd;
+      color: #111;
+      text-decoration: none;
+      font-size: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .video-panel {
+      background: linear-gradient(135deg, #ffffff, #edf4ff);
+      border: 3px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(26, 77, 166, 0.12);
+      padding: 18px 22px;
+      min-height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 12px 0 20px;
+      text-align: center;
+    }
+    .video-caption {
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      font-weight: 700;
+      color: #113d8f;
+      line-height: 1.55;
+      word-break: keep-all;
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 12px 0 20px;
+    }
+    .action-btn {
+      appearance: none;
+      border: 3px solid rgba(0,0,0,0.18);
+      border-radius: 16px;
+      background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+      color: var(--btn-text);
+      font-size: clamp(1.15rem, 2vw, 1.6rem);
+      font-weight: 700;
+      padding: 20px 26px;
+      min-height: 74px;
+      min-width: 180px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(30,64,175,0.18);
+      transition: transform 0.12s ease, filter 0.12s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .action-btn:hover { filter: brightness(1.08); }
+    .action-btn:active { transform: translateY(2px) scale(0.99); }
+    .stop-btn {
+      background: linear-gradient(180deg, var(--danger), var(--danger-dark));
+      box-shadow: 0 6px 15px rgba(185,28,28,0.18);
+    }
+    h1 {
+      font-size: clamp(1.9rem, 3vw, 2.6rem);
+      margin: 12px 0 18px;
+    }
+    h2 {
+      margin-top: 26px; 
+      margin-bottom: 12px;
+      font-size: clamp(1.45rem, 2.5vw, 2.1rem);
+    }
+    p { margin: 10px 0; }
+    hr { margin: 20px 0; }
+    @media (max-width: 600px) {
+      body { padding: 15px; }
+      .button-row { display: grid; grid-template-columns: 1fr; }
+      .action-btn { width: 100%; min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-link">⬅️ もとのがめんにもどる</a>
+  <div class="video-panel"><div id="video-caption" class="video-caption">説明を待っています</div></div>
+  <h1>1. かれんだー・あらーむのつかいかた</h1>
 
+  <div class="button-row">
+    <button type="button" class="action-btn stop-btn" onclick="tomeru()">⏹️ 音声を止める</button>
+  </div>
 
+  <div class="button-row">
+    <button type="button" class="action-btn" onclick="yomu('カレンダー・アラームの使い方。カレンダーは自分の予定を作成できます。アラームは時計のアプリを開き、好きな時間に設定します。')">📣 かいせつを再生</button>
+  </div>
 
-
-<button onclick="tomeru()">⏹️ 音声を止める</button>
-    <button onclick="yomu('かれんだー・あらーむのつかいかた。かれんだーはじぶんのよていをかくことができます。あらーむはとけいのあぷりをひらきます。そうしたらあとはすきなじかんにあらーむをせっていするだけ。')"
-    style="font-size: 26px; padding: 15px 25px; cursor: pointer;">
-
-<hr style="margin: 20px 0;">
-<h2>かれんだー・あらーむのつかいかた</h2>
-<p>1 かれんだーはじぶんのよていをかくことができます</p>
+  <hr>
+  <h2>やり方</h2>
+  <p>1 かれんだーはじぶんのよていをかくことができます</p>
 <p>2 あらーむはまずすまほのとけいのあぷりをひらきます</p>
 <p>3 あとはすきなじかんにあらーむをせっていするだけ</p>
-<script>
-                //音声を読み上げる関数
-                    function yomu(text) {
-                   const speech = new SpeechSynthesisUtterance(text);
-                    speech.lang = "ja-JP";
-                    
-                    //再生中の音声を一度クリアしてすぐに新しい文字を喋る　
-                    speechSynthesis.cancel() ;
-                    speechSynthesis.speak(speech);
-                  }
-                    //音声を止める関数
-                    function tomeru(){
-                        speechSynthesis.cancel();
-                    }
 
-            </script>
+  <script>
+    (function () {
+      const caption = document.getElementById('video-caption');
+      let currentUtterance = null;
 
+      function updateCaption(text) {
+        if (!caption) return;
+        caption.textContent = text || '説明を待っています';
+      }
 
-        </body></html>
+      function stopSpeech() {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+      }
+
+      function yomu(text) {
+        const safeText = text || '説明を待っています';
+        stopSpeech();
+        updateCaption(safeText);
+
+        if (!('speechSynthesis' in window)) {
+          return;
+        }
+
+        currentUtterance = new SpeechSynthesisUtterance(safeText);
+        currentUtterance.lang = 'ja-JP';
+        currentUtterance.rate = 1;
+        currentUtterance.pitch = 1;
+        currentUtterance.volume = 1;
+        window.speechSynthesis.speak(currentUtterance);
+      }
+
+      function tomeru() {
+        stopSpeech();
+        updateCaption('音声を止めました');
+      }
+
+      window.yomu = yomu;
+      window.tomeru = tomeru;
+    })();
+  </script>
+</body>
+</html>
