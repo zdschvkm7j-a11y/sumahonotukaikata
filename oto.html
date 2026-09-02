@@ -105,67 +105,173 @@
       .action-btn { width: 100%; min-width: 0; }
     }
   </style>
+  <link rel="stylesheet" href="readable-theme.css">
+<!-- EXPERIENCE_STYLES_START -->
+    <style>
+      .experience-panel {
+        background: linear-gradient(135deg, #fff7d9, #f3f9ff);
+        border: 3px solid #d79b2f;
+        border-radius: 18px;
+        padding: 18px 18px 10px;
+        margin: 18px 0 20px;
+        box-shadow: 0 8px 18px rgba(87, 76, 0, 0.12);
+      }
+      .experience-status {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #7a4b00;
+        margin-bottom: 8px;
+      }
+      .experience-panel h2 {
+        margin: 6px 0 12px;
+      }
+      .experience-steps {
+        display: grid;
+        gap: 10px;
+        margin: 0 0 12px;
+      }
+      .experience-step {
+        background: #fff;
+        border: 2px solid #e5d6a7;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-weight: 700;
+        color: #3a3a3a;
+        transition: all 0.15s ease;
+      }
+      .experience-step.active {
+        background: #eaf7ff;
+        border-color: #1e5bd7;
+        box-shadow: inset 0 0 0 2px rgba(30, 91, 215, 0.25);
+      }
+      .experience-step.done {
+        background: #ebfce9;
+        border-color: #5aa16e;
+      }
+      @media (max-width: 600px) {
+        .experience-panel { padding: 16px 12px 8px; }
+      }
+    </style>
+    <!-- EXPERIENCE_STYLES_END -->
 </head>
-<body>
-  <a href="index.html" class="back-link">⬅️ もとのがめんにもどる</a>
-  <div class="video-panel"><div id="video-caption" class="video-caption">説明を待っています</div></div>
-  <h1>1. おとのおおきさ・ちゃくしんおんのかえかた</h1>
-
-  <div class="button-row">
-    <button type="button" class="action-btn stop-btn" onclick="tomeru()">⏹️ 音声を止める</button>
-  </div>
-
-  <div class="button-row">
-    <button type="button" class="action-btn" onclick="yomu('音の大きさを調整して、電話の着信を聞き取りやすくします。スマートフォンの右側にある音量ボタンで調整できます。上のボタンで音が大きくなり、下のボタンで音が小さくなります。音量設定の画面で、各アプリごとに音量を変えることもできます。難聴の方は、特に電話と着信音の音量を大きめに設定することをお勧めします。')"">📣 かいせつを再生</button>
-  </div>
-
-  <hr>
+<body class="topic-page">
+<!-- TEXT_SIZE_CONTROLS_START -->
+    <div class="text-size-controls" data-text-size-controls>
+      <span class="text-size-label" data-text-size-label>文字の大きさ：標準</span>
+      <button type="button" class="text-size-toggle" data-text-size-toggle aria-label="文字の大きさを変更（現在は標準）">🔤 文字を大きくする</button>
+    </div>
+    <!-- TEXT_SIZE_CONTROLS_END -->
+<a href="index.html" class="back-link">⬅️ もとのがめんにもどる</a>
+<div class="video-panel"><div id="video-caption" class="video-caption">説明を待っています</div></div>
+<!-- SPEECH_CONTROLS_START -->
+    <div class="button-row speech-controls" aria-label="音声の操作">
+      <button type="button" class="action-btn" onclick='yomu("音の大きさを調整して、電話の着信を聞き取りやすくします。スマートフォンの右側にある音量ボタンで調整できます。上のボタンで音が大きくなり、下のボタンで音が小さくなります。音量設定の画面で、各アプリごとに音量を変えることもできます。難聴の方は、特に電話と着信音の音量を大きめに設定することをお勧めします。")'>📣 かいせつを再生</button>
+      <button type="button" class="action-btn stop-btn" onclick="tomeru()">⏹️ 音声を止める</button>
+    </div>
+    <!-- SPEECH_CONTROLS_END -->
+<!-- EXPERIENCE_MARKUP_START -->
+    <div class="experience-panel" id="experience-panel" aria-labelledby="experience-title">
+      <div class="experience-status" aria-live="polite">体験ステップ 1 / 5</div>
+      <h2 id="experience-title">体験してみよう</h2>
+      <div class="experience-steps"><div class="experience-step" data-step="0">1. 音量ボタンを見つける</div><div class="experience-step" data-step="1">2. 上のボタンで音を大きくする</div><div class="experience-step" data-step="2">3. 下のボタンで音を小さくする</div><div class="experience-step" data-step="3">4. 着信音の確認をする</div><div class="experience-step" data-step="4">5. アプリ別の音量にも気をつける</div></div>
+      <div class="button-row">
+        <button type="button" class="action-btn" onclick="nextExperienceStep()">次のステップへ</button>
+        <button type="button" class="action-btn stop-btn" onclick="resetExperience()">やり直す</button>
+      </div>
+    </div>
+    <!-- EXPERIENCE_MARKUP_END -->
+    <h1>1. おとのおおきさ・ちゃくしんおんのかえかた</h1>
+<hr>
   <h2>やり方</h2>
   <p>1 せっていをひらきおとのさうんどしょっかくをひらきます。</p>
 <p>2 ちゃくしんおんとつうちおんのこうもくがあるためそこをさゆうにうごかします。</p>
 <p>3 つうちおんやちゃくしんおんをえらんで、すきなおとにすればかんりょうです</p>
+  <script src="readable-theme.js"></script>
+<!-- EXPERIENCE_SCRIPT_START -->
+    <script>
+      (function () {
+        const stepList = ["音量ボタンを見つける", "上のボタンで音を大きくする", "下のボタンで音を小さくする", "着信音の確認をする", "アプリ別の音量にも気をつける"];
+        let experienceIndex = 0;
 
-  <script>
-    (function () {
-      const caption = document.getElementById('video-caption');
-      let currentUtterance = null;
+        function updateCaption(text) {
+          const caption = document.getElementById('video-caption');
+          if (caption) {
+            caption.textContent = text || '説明を待っています';
+          }
+        }
 
-      function updateCaption(text) {
-        if (!caption) return;
-        caption.textContent = text || '説明を待っています';
-      }
+        function yomu(text) {
+          updateCaption(text);
+          if (!('speechSynthesis' in window)) {
+            return;
+          }
 
-      function stopSpeech() {
-        if ('speechSynthesis' in window) {
           window.speechSynthesis.cancel();
-        }
-      }
-
-      function yomu(text) {
-        const safeText = text || '説明を待っています';
-        stopSpeech();
-        updateCaption(safeText);
-
-        if (!('speechSynthesis' in window)) {
-          return;
+          const speech = new SpeechSynthesisUtterance(text || '説明を待っています');
+          speech.lang = 'ja-JP';
+          speech.rate = 1;
+          speech.pitch = 1;
+          speech.volume = 1;
+          window.speechSynthesis.speak(speech);
         }
 
-        currentUtterance = new SpeechSynthesisUtterance(safeText);
-        currentUtterance.lang = 'ja-JP';
-        currentUtterance.rate = 1;
-        currentUtterance.pitch = 1;
-        currentUtterance.volume = 1;
-        window.speechSynthesis.speak(currentUtterance);
-      }
+        function tomeru() {
+          if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+          }
+          updateCaption('音声を止めました');
+        }
 
-      function tomeru() {
-        stopSpeech();
-        updateCaption('音声を止めました');
-      }
+        function renderExperience() {
+          const panel = document.getElementById('experience-panel');
+          if (!panel) {
+            return;
+          }
 
-      window.yomu = yomu;
-      window.tomeru = tomeru;
-    })();
-  </script>
+          const steps = panel.querySelectorAll('.experience-step');
+          steps.forEach((node, index) => {
+            node.classList.toggle('active', index === experienceIndex);
+            node.classList.toggle('done', index < experienceIndex);
+          });
+
+          const status = panel.querySelector('.experience-status');
+          if (status) {
+            status.textContent = '体験ステップ ' + (experienceIndex + 1) + ' / ' + stepList.length;
+          }
+
+          const currentStep = stepList[experienceIndex];
+          if (currentStep) {
+            yomu(currentStep);
+          }
+        }
+
+        function nextExperienceStep() {
+          if (experienceIndex < stepList.length - 1) {
+            experienceIndex += 1;
+            renderExperience();
+            return;
+          }
+
+          const panel = document.getElementById('experience-panel');
+          const status = panel && panel.querySelector('.experience-status');
+          if (status) {
+            status.textContent = '体験完了！ すべての手順を確認しました';
+          }
+        }
+
+        function resetExperience() {
+          experienceIndex = 0;
+          renderExperience();
+        }
+
+        window.__EXPERIENCE_STEPS__ = stepList;
+        window.nextExperienceStep = nextExperienceStep;
+        window.resetExperience = resetExperience;
+        window.yomu = yomu;
+        window.tomeru = tomeru;
+        window.addEventListener('DOMContentLoaded', renderExperience, { once: true });
+      }());
+    </script>
+    <!-- EXPERIENCE_SCRIPT_END -->
 </body>
 </html>

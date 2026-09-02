@@ -65,9 +65,16 @@
       .menu-btn { height: 140px; padding: 24px 20px; }
     }
   </style>
+  <link rel="stylesheet" href="readable-theme.css">
 </head>
-<body>
-  <header>
+<body class="index-page">
+<!-- TEXT_SIZE_CONTROLS_START -->
+    <div class="text-size-controls" data-text-size-controls>
+      <span class="text-size-label" data-text-size-label>文字の大きさ：標準</span>
+      <button type="button" class="text-size-toggle" data-text-size-toggle aria-label="文字の大きさを変更（現在は標準）">🔤 文字を大きくする</button>
+    </div>
+    <!-- TEXT_SIZE_CONTROLS_END -->
+<header>
     <h1>スマホのつかいかた</h1>
     <p>すまーとふぉんのきほんてきなそうさほうほうをせつめいします</p>
   </header>
@@ -149,5 +156,6 @@
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     }
   </script>
+  <script src="readable-theme.js"></script>
 </body>
 </html>

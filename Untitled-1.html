@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ほーむがめんのせいりやりかた</title>
+  <title>のうのとれーにんぐ</title>
   <style>
     :root {
       --bg: #eef7ff;
@@ -37,31 +37,45 @@
       font-size: 22px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-    .video-panel {
-      background: linear-gradient(135deg, #ffffff, #edf4ff);
-      border: 3px solid var(--line);
-      border-radius: 18px;
-      box-shadow: 0 10px 24px rgba(26, 77, 166, 0.12);
-      padding: 18px 22px;
-      min-height: 110px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 12px 0 20px;
-      text-align: center;
-    }
-    .video-caption {
-      font-size: clamp(1.2rem, 2vw, 1.8rem);
-      font-weight: 700;
-      color: #113d8f;
-      line-height: 1.55;
-      word-break: keep-all;
-    }
     .button-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 16px;
       margin: 12px 0 20px;
+    }
+    #difficulty-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin: 24px 0 28px;
+    }
+    .difficulty-btn {
+      appearance: none;
+      border: 3px solid rgba(0,0,0,0.18);
+      border-radius: 18px;
+      background: #e2e8f0;
+      color: var(--text);
+      font-size: clamp(1.15rem, 2vw, 1.5rem);
+      font-weight: 800;
+      padding: 20px 22px;
+      min-height: 72px;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+    }
+    .difficulty-btn.easy { background: linear-gradient(180deg, #4ade80, #16a34a); color: #fff; }
+    .difficulty-btn.normal { background: linear-gradient(180deg, #fbbf24, #f59e0b); color: #fff; }
+    .difficulty-btn.hard { background: linear-gradient(180deg, #f87171, #dc2626); color: #fff; }
+    .difficulty-btn.active {
+      box-shadow: 0 10px 22px rgba(30,64,175,0.25);
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.7);
+      filter: brightness(1.04);
     }
     .action-btn {
       appearance: none;
@@ -162,10 +176,9 @@
     </div>
     <!-- TEXT_SIZE_CONTROLS_END -->
 <a href="index.html" class="back-link">⬅️ もとのがめんにもどる</a>
-<div class="video-panel"><div id="video-caption" class="video-caption">説明を待っています</div></div>
 <!-- SPEECH_CONTROLS_START -->
     <div class="button-row speech-controls" aria-label="音声の操作">
-      <button type="button" class="action-btn" onclick='yomu("ホーム画面の使いやすさを改善します。アプリのアイコンを長押しして、別の位置にドラッグして移動できます。不要なアプリは削除することで、画面をスッキリさせられます。アプリをホルダーにまとめることで、探しやすくなります。")'>📣 かいせつを再生</button>
+      <button type="button" class="action-btn" onclick='yomu("スマートフォンを使って、脳を活性化させるトレーニングができます。パズルやクイズなど、さまざまなゲームが用意されています。毎日少しの時間をかけてトレーニングすることで、認知機能の維持や向上に役立ちます。")'>📣 かいせつを再生</button>
       <button type="button" class="action-btn stop-btn" onclick="tomeru()">⏹️ 音声を止める</button>
     </div>
     <!-- SPEECH_CONTROLS_END -->
@@ -173,22 +186,52 @@
     <div class="experience-panel" id="experience-panel" aria-labelledby="experience-title">
       <div class="experience-status" aria-live="polite">体験ステップ 1 / 5</div>
       <h2 id="experience-title">体験してみよう</h2>
-      <div class="experience-steps"><div class="experience-step" data-step="0">1. アイコンを長押しする</div><div class="experience-step" data-step="1">2. 位置を動かす</div><div class="experience-step" data-step="2">3. 整理したいアプリを別の場所へ移す</div><div class="experience-step" data-step="3">4. 使わないアプリを消す</div><div class="experience-step" data-step="4">5. フォルダにまとめて見やすくする</div></div>
+      <div class="experience-steps"><div class="experience-step" data-step="0">1. 脳トレアプリを開く</div><div class="experience-step" data-step="1">2. ゲームを選ぶ</div><div class="experience-step" data-step="2">3. まずは簡単な問題から始める</div><div class="experience-step" data-step="3">4. 少しずつ難しくする</div><div class="experience-step" data-step="4">5. 続けて習慣にする</div></div>
       <div class="button-row">
         <button type="button" class="action-btn" onclick="nextExperienceStep()">次のステップへ</button>
         <button type="button" class="action-btn stop-btn" onclick="resetExperience()">やり直す</button>
       </div>
     </div>
     <!-- EXPERIENCE_MARKUP_END -->
-    <h1>1. ほーむがめんのせいりやりかた</h1>
-<hr>
-  <h2>やり方</h2>
-  <p>1 がめんをながおしするとすきなようにうごかせるようになる</p>
+    <h1>1. のうのとれーにんぐ</h1>
+
+  <div style="margin: 20px 0 12px; text-align: center; font-size: 1.5rem; font-weight: 800; color: #1e5bd7;">
+    なんいどをえらんでください
+  </div>
+
+  <div class="button-row" id="difficulty-row">
+    <button type="button" class="difficulty-btn easy active" data-difficulty="easy">簡単</button>
+    <button type="button" class="difficulty-btn normal" data-difficulty="normal">ふつう</button>
+    <button type="button" class="difficulty-btn hard" data-difficulty="hard">むずかしい</button>
+  </div>
+
+  <div id="game-container" style="display:none;">
+    <div style="background: #ffffff; border: 3px solid #2d4d8a; border-radius: 18px; padding: 30px; margin: 20px 0; box-shadow: 0 10px 24px rgba(26, 77, 166, 0.12);">
+      <h2 id="problem-text" style="font-size: 2rem; text-align: center; margin: 20px 0; color: #1e5bd7;">問題が表示されます</h2>
+      <div id="score-display" style="text-align: center; font-size: 1.5rem; color: #113d8f; margin-bottom: 8px;">スコア: <span id="score">0</span>/10</div>
+      <div id="level-display" style="text-align: center; font-size: 1.3rem; color: #0f172a; margin-bottom: 8px; font-weight: bold;">レベル: 簡単</div>
+      <div id="streak-display" style="text-align: center; font-size: 1.2rem; color: #0f766e; margin-bottom: 8px; font-weight: bold;">連続正解: 0</div>
+      <div id="best-score-display" style="text-align: center; font-size: 1.2rem; color: #7c2d12; margin-bottom: 20px; font-weight: bold;">最高記録: 0</div>
+      
+      <div style="background: #eef7ff; border-radius: 12px; padding: 20px; margin: 20px 0;">
+        <p style="font-size: 1.3rem; text-align: center; margin: 10px 0;">答え：</p>
+        <input type="number" id="answer-input" placeholder="答えを入力してください" style="width: 100%; padding: 15px; font-size: 1.2rem; border: 2px solid #1e5bd7; border-radius: 8px; text-align: center;">
+      </div>
+
+      <div class="button-row" style="justify-content: center;">
+        <button type="button" class="action-btn" id="submit-btn">✅ 回答する</button>
+        <button type="button" class="action-btn stop-btn" id="quit-btn">⏹️ やめる</button>
+      </div>
+
+      <div id="result-message" style="font-size: 1.5rem; text-align: center; margin-top: 20px; color: #1e5bd7; min-height: 30px; font-weight: bold;"></div>
+    </div>
+  </div>
   <script src="readable-theme.js"></script>
+  <script src="brain-training.js"></script>
 <!-- EXPERIENCE_SCRIPT_START -->
     <script>
       (function () {
-        const stepList = ["アイコンを長押しする", "位置を動かす", "整理したいアプリを別の場所へ移す", "使わないアプリを消す", "フォルダにまとめて見やすくする"];
+        const stepList = ["脳トレアプリを開く", "ゲームを選ぶ", "まずは簡単な問題から始める", "少しずつ難しくする", "続けて習慣にする"];
         let experienceIndex = 0;
 
         function updateCaption(text) {
