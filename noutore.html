@@ -214,33 +214,32 @@
         });
       }
 
-      function getDifficultyFromStreak() {
-        if (consecutiveCorrect >= 4) return 'hard';
-        if (consecutiveCorrect >= 2) return 'normal';
-        return 'easy';
-      }
-
       function generateProblem() {
-        const level = getDifficultyFromStreak();
-        let num1;
-        let num2;
-        let operation;
+        const level = currentDifficulty;
+        const difficultyRanges = {
+          easy: { firstMin: 1, firstMax: 9, secondMin: 1, secondMax: 9 },
+          normal: { firstMin: 1, firstMax: 9, secondMin: 10, secondMax: 99 },
+          hard: { firstMin: 10, firstMax: 99, secondMin: 10, secondMax: 99 }
+        };
+        const range = difficultyRanges[level] || difficultyRanges.easy;
+        let num1 = randomInt(range.firstMin, range.firstMax);
+        let num2 = randomInt(range.secondMin, range.secondMax);
+        const operations = ['+', '-', '×', '÷'];
+        const operation = operations[Math.floor(Math.random() * operations.length)];
 
-        if (level === 'easy') {
-          num1 = randomInt(1, 9);
-          num2 = randomInt(1, 9);
-          const operations = ['+', '-', '×', '÷'];
-          operation = operations[Math.floor(Math.random() * operations.length)];
-        } else if (level === 'normal') {
-          num1 = randomInt(1, 9);
-          num2 = randomInt(1, 9);
-          const operations = ['+', '-', '×', '÷'];
-          operation = operations[Math.floor(Math.random() * operations.length)];
-        } else {
-          num1 = randomInt(1, 9);
-          num2 = randomInt(10, 99);
-          const operations = ['+', '-', '×', '÷'];
-          operation = operations[Math.floor(Math.random() * operations.length)];
+        if (operation === '÷') {
+          const divisionPairs = [];
+          for (let divisor = range.firstMin; divisor <= range.firstMax; divisor++) {
+            for (let dividend = range.secondMin; dividend <= range.secondMax; dividend++) {
+              if (dividend % divisor === 0) {
+                divisionPairs.push({ divisor, dividend });
+              }
+            }
+          }
+
+          const pair = divisionPairs[Math.floor(Math.random() * divisionPairs.length)];
+          num1 = pair.divisor;
+          num2 = pair.dividend;
         }
 
         let answer;
@@ -258,27 +257,8 @@
           answer = num1 * num2;
           display = `${num1} × ${num2} = ?`;
         } else {
-          let divisor;
-          let dividend;
-
-          if (level === 'hard') {
-            divisor = randomInt(1, 9);
-            dividend = divisor * randomInt(1, 9);
-            const value = randomInt(1, 9);
-            const multiplier = randomInt(2, 9);
-            const base = value * multiplier;
-            answer = base / multiplier;
-            display = `${base} ÷ ${multiplier} = ?`;
-          } else {
-            divisor = randomInt(1, 9);
-            dividend = divisor * randomInt(1, 9);
-            answer = dividend / divisor;
-            display = `${dividend} ÷ ${divisor} = ?`;
-          }
-
-          if (level === 'hard' && display.includes('÷')) {
-            // already prepared as a clean division problem
-          }
+          answer = num2 / num1;
+          display = `${num2} ÷ ${num1} = ?`;
         }
 
         return { display, answer };
@@ -317,10 +297,9 @@
             bestScore = score;
             localStorage.setItem('brainGameBestScore', String(bestScore));
           }
-          setDifficulty(getDifficultyFromStreak());
+          updateStatusDisplays();
           resultMessage.textContent = '🎉 正解！';
           resultMessage.style.color = '#16a34a';
-          updateStatusDisplays();
           setTimeout(() => {
             showNextProblem();
           }, 1500);
@@ -329,10 +308,9 @@
 
         consecutiveCorrect = 0;
         if (score > 0) score--;
-        setDifficulty('easy');
+        updateStatusDisplays();
         resultMessage.textContent = `❌ 不正解（正答: ${currentAnswer}）`;
         resultMessage.style.color = '#dc2626';
-        updateStatusDisplays();
         setTimeout(() => {
           showNextProblem();
         }, 500);
